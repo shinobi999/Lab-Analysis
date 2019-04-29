@@ -2,11 +2,42 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import csv
+'''
+ToDo list: 
+    develop calculation methods
+    develop main loop that breaks CSV file into 28500 event lengths
+
+'''
+
 
 #array for on/off neuromorphic camera values
 on=[]
 #array for timestamp value of camera samples
 timestamp=[]
+
+class dataChunk:
+    def __init__(self, on, timestamp):
+        duration=calcDuration()
+        density=calcDensity()
+        covariance=calcCovariance()
+        dict=zip(on, timestamp)
+        length=28500
+
+    def getDur():
+        return self.duration
+
+    def getDens():
+        return self.density
+
+    def getCov():
+        return self.covariance
+
+    def calcDuration():
+
+    def calcDensity():
+
+    def calcCovariance(): 
+
 with open('C:/Users/Admin/Desktop/WaveletAnalysis/wheelTest.csv') as csvfile:
      spamreader = csv.reader(csvfile, delimiter=',')
      for row in spamreader:
