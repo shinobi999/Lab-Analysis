@@ -9,58 +9,66 @@ TODO list:
 
 '''
 
-#array for on/off neuromorphic camera values
-on=[]
-#array for on[] arrays
-metaOn={}
-#array for timestamp value of camera samples
-timestamp=[]
+# Array for on/off neuromorphic camera values
+on = []
+# Array for on[] arrays
+metaChunk = []
+# Array for timestamp value of camera samples
+timestamp = []
+
 
 class dataChunk:
     def __init__(self, on, timestamp):
-        duration=calcDuration()
-        density=calcDensity()
-        covariance=calcCovariance()
-        dict=zip(on, timestamp)
-        length=28500
-
-    def getDur():
-        return self.duration
-
-    def getDens():
-        return self.density
-
-    def getCov():
-        return self.covariance
-
-    def calcDuration():
-        return duration
-    def calcDensity():
-        return density
-    def calcCovariance(): 
-        return covariance
+        self.duration = self.calcDuration()
+        self.density = self.calcDensity()
+        self.covariance = self.calcCovariance()
+        self.dict = zip(on, timestamp)
+        self.length = 28500
 
 
+    def getDur(self):
+        return
 
-with open('C:/Users/Admin/Desktop/WaveletAnalysis/wheelTest.csv') as csvfile:
-     spamreader = csv.reader(csvfile, delimiter=',')
-     myCount=0
-     loopCount=0
-     innerOn={}
-     for row in spamreader:
-        if myCount==28500:
-            metaOn[loopCount]=[innerOn]
-            myCount=0
-            loopCount+=1 
+    def getDens(self):
+        return
+
+    def getCov(self):
+        return
+
+    def calcDuration(self):
+        """Time covered by the entire CSV file"""
+        return
+    def calcDensity(self):
+        """Density of events. Do on a per-chunk and whole-file basis"""
+        return
+    def calcCovariance(self):
+        """Covariance of one chunk vs another"""
+        return
+
+
+# csvLocation = 'C:/Users/Admin/Desktop/WaveletAnalysis/wheelTest.csv'
+csvLocation = 'wheelTest.csv'
+
+with open(csvLocation) as csvFile:
+    spamReader = csv.reader(csvFile, delimiter=',')
+    eventCount = 0          # How many events have been processed since last chunk creation
+    chunkTemp = {}          # Where partial chunks are stored during creation
+    chunkLength = 28500     # Number of events in a chunk
+    for row in spamReader:
+        if eventCount == chunkLength:
+            # Finilize chunk & append to metaChunk
+            metaChunk.append([chunkTemp])
+            chunkTemp.clear()
+            eventCount = 0
             
-        #on.append(row[0])
-        #timestamp.append(row[1])
+        # on.append(row[0])
+        # timestamp.append(row[1])
         try:
-            innerOn[myCount]=[int(row[0]), int(row[1])]
+            chunkTemp[eventCount] = [int(row[0]), int(row[1])]
         except:
             continue
         
-        myCount+=1
+        eventCount += 1
         '''
         try:
             on[-1]=int(on[-1])
@@ -74,9 +82,6 @@ with open('C:/Users/Admin/Desktop/WaveletAnalysis/wheelTest.csv') as csvfile:
 #eventTitle=on.pop(0)
 #timeStampTitle=timestamp.pop(0)
 
-# remove stray startup value
-#del on[0:2]
-#del timestamp[0:2]
 
 # normalize time stamps
 '''
@@ -90,7 +95,11 @@ onslice=on[0:60]
 plt.scatter(timestampslice, onslice)
 plt.show()
 '''
-for x in metaOn:
-    print (x)
-    for y in metaOn[x]:
-        print(y,':', metaOn[x][y])
+
+print("Chunk count = " + str(len(metaChunk)))
+
+for chunk in metaChunk:
+    print("Printing chunk")
+    print(chunk)
+    for val in chunk:
+        print(val)
