@@ -48,42 +48,35 @@ class dataChunk:
 
 # csvLocation = 'C:/Users/Admin/Desktop/WaveletAnalysis/wheelTest.csv'
 csvLocation = 'wheelTest.csv'
+normalizeTimestamps = True
 
 with open(csvLocation) as csvFile:
     spamReader = csv.reader(csvFile, delimiter=',')
     eventCount = 0          # How many events have been processed since last chunk creation
-    chunkTemp = {}          # Where partial chunks are stored during creation
+    chunkTemp = []          # Where partial chunks are stored during creation
     chunkLength = 28500     # Number of events in a chunk
+    headerInfo = []         # Header titles
+
     for row in spamReader:
-        if eventCount == chunkLength:
-            # Finilize chunk & append to metaChunk
+        if eventCount == chunkLength:   # Finalize chunk & append to metaChunk
+
+            # Make timestamps in chunk start at 0
+            if normalizeTimestamps:
+                firstTime = chunkTemp[0][1]
+                for i, _ in enumerate(chunkTemp):
+                    chunkTemp[i][1] = chunkTemp[i][1] - firstTime
+
             metaChunk.append([chunkTemp])
             chunkTemp.clear()
             eventCount = 0
-            
-        # on.append(row[0])
-        # timestamp.append(row[1])
+
         try:
-            chunkTemp[eventCount] = [int(row[0]), int(row[1])]
-        except:
-            continue
-        
-        eventCount += 1
-        '''
-        try:
-            on[-1]=int(on[-1])
-            timestamp[-1]=int(timestamp[-1])
-            metaOn[-1]=[int(row[0]), int(row[1])]
-        except:
-            continue
-        '''
+            chunkTemp.append([int(row[0]) == 1, int(row[1])])
+            eventCount += 1
+        except ValueError:
+            # Header Info
+            headerInfo = [row[0], row[1]]
 
-# grab header values from csv
-#eventTitle=on.pop(0)
-#timeStampTitle=timestamp.pop(0)
-
-
-# normalize time stamps
 '''
 TODO test loop functionality with dictionary metaOn
 firstTime=timestamp[0]
